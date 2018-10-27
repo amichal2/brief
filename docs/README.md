@@ -2,7 +2,7 @@
 Sample application using Ktor framework
 
 ### build
-gradlew clean
+gradlew clean \
 gradlew build
 
 ### run
