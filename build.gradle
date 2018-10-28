@@ -3,10 +3,10 @@ buildscript {
         jcenter()
         maven { url 'https://kotlin.bintray.com/kotlin-eap' }
     }
-    
+
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.1"
+        classpath "com.github.jengelman.gradle.plugins:shadow:$shadow_version"
     }
 }
 
