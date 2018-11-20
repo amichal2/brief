@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://kotlin.bintray.com/kotlin-eap' }
     }
 
     dependencies {
@@ -28,9 +27,6 @@ sourceSets {
 repositories {
     mavenLocal()
     jcenter()
-    maven { url 'https://kotlin.bintray.com/ktor' }
-    maven { url 'https://kotlin.bintray.com/kotlin-eap' }
-    maven { url 'https://plugins.gradle.org/m2/' }
 }
 
 dependencies {
