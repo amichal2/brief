@@ -2,6 +2,7 @@ package com.amichal2.brief.client
 
 import com.amichal2.brief.model.ContentResponse
 import com.amichal2.brief.model.GuardianResponse
+import com.fasterxml.jackson.databind.DeserializationFeature
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JacksonSerializer
@@ -16,7 +17,9 @@ class BriefClientImpl : BriefClient {
     override suspend fun getContent(query: String, url: String): ContentResponse {
         val client = HttpClient(Apache) {
             install(JsonFeature) {
-                serializer = JacksonSerializer()
+                serializer = JacksonSerializer {
+                    configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                }
             }
         }
         val guardianResponse = client.get<GuardianResponse>("$url/search?q=$query&order-by=newest&show-fields=all&api-key=263b5c7d-02df-4865-aa7a-d2a3c73795f2")

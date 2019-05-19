@@ -4,7 +4,6 @@ import com.amichal2.brief.model.UnexpectedResponseException
 import com.amichal2.brief.resource.briefRouting
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -35,7 +34,6 @@ fun Application.briefModule() {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
             configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            registerModule(KotlinModule())
         }
     }
 
