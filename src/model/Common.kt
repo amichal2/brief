@@ -2,7 +2,7 @@ package com.amichal2.brief.model
 
 data class PingRequest(val query: String?, val rating: Int)
 
-data class ContentResponse(val content: String, val rating: Int)
+data class ContentResponse(val content: String)
 
 data class GuardianResponse(val response: GuardianResponseContent)
 

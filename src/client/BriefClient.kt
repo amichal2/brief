@@ -1,32 +1,50 @@
 package com.amichal2.brief.client
 
-import com.amichal2.brief.model.ContentResponse
 import com.amichal2.brief.model.GuardianResponse
+import com.amichal2.brief.model.Result
 import com.fasterxml.jackson.databind.DeserializationFeature
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.get
+import org.apache.http.client.utils.URIBuilder
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 interface BriefClient {
-    suspend fun getContent(query: String, url: String): ContentResponse
+    suspend fun getGuardianContent(): List<Result>
 }
 
-class BriefClientImpl : BriefClient {
-    override suspend fun getContent(query: String, url: String): ContentResponse {
+class BriefClientImpl(private val query: String, private val url: String, private val apiKey: String) : BriefClient {
+
+    override suspend fun getGuardianContent(): List<Result> {
         val client = HttpClient(Apache) {
             install(JsonFeature) {
                 serializer = JacksonSerializer {
                     configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 }
             }
+            engine {
+                response.apply {
+                    defaultCharset = Charsets.UTF_8
+                }
+            }
         }
-        val guardianResponse = client.get<GuardianResponse>("$url/search?q=$query&order-by=newest&show-fields=all&api-key=263b5c7d-02df-4865-aa7a-d2a3c73795f2")
+
+        val uriBuilder = URIBuilder(url)
+            .setPath("/search")
+            .addParameter("q", query)
+            .addParameter("order-by", "newest")
+            .addParameter("show-fields", "all")
+            .addParameter("from-date", LocalDate.now().format(DateTimeFormatter.ISO_DATE))
+            .addParameter("page-size", "100")
+            .addParameter("api-key", apiKey)
+
+        println("tmp print: " + uriBuilder.build().toString())
+
+        val guardianResponse = client.get<GuardianResponse>(uriBuilder.build().toString())
         client.close()
-        return ContentResponse(
-            guardianResponse.response.results[0].fields.bodyText,
-            guardianResponse.response.results[0].fields.wordcount.toInt()
-        )
+        return guardianResponse.response.results
     }
 }

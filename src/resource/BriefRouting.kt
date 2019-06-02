@@ -1,5 +1,6 @@
 package com.amichal2.brief.resource
 
+import com.amichal2.brief.client.BriefClientImpl
 import com.amichal2.brief.model.PingRequest
 import com.amichal2.brief.service.BriefServiceImpl
 import io.ktor.application.application
@@ -23,8 +24,10 @@ fun Routing.briefRouting() {
     get("/content") {
         val queryParam = call.request.queryParameters["query"] ?: throw RuntimeException("query parameter is not present")
         val url = application.environment.config.propertyOrNull("ktor.upstream.url")?.getString() ?: throw RuntimeException("host not defined")
-        val briefService = BriefServiceImpl()
+        val apiKey = application.environment.config.propertyOrNull("ktor.upstream.apiKey")?.getString()
+            ?: throw RuntimeException("api key not defined")
+        val briefService = BriefServiceImpl(BriefClientImpl(queryParam, url, apiKey))
 
-        call.respond(HttpStatusCode.OK, briefService.getContent(queryParam, url))
+        call.respond(HttpStatusCode.OK, briefService.getContent())
     }
 }
