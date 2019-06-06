@@ -10,10 +10,7 @@ interface BriefService {
 class BriefServiceImpl(private val briefClient: BriefClientImpl) : BriefService {
 
     override suspend fun getContent(): ContentResponse {
-        val articles = briefClient.getGuardianContent()
-        for (result in articles) {
-            println("plain text " + result.fields.bodyText)
-        }
-        return ContentResponse(articles[0].fields.bodyText)
+        val article = briefClient.getGuardianContent().filter { it.fields.wordcount.toInt() in 100..500 }.first()
+        return ContentResponse(article.fields.headline.toUpperCase() + "    " + article.fields.bodyText)
     }
 }
