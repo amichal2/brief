@@ -35,9 +35,9 @@ class BriefClientImpl(private val query: String, private val url: String, privat
         val uriBuilder = URIBuilder(url)
             .setPath("/search")
             .addParameter("q", query)
-            .addParameter("order-by", "newest")
+//            .addParameter("order-by", "newest")
             .addParameter("show-fields", "all")
-            .addParameter("from-date", LocalDate.now().format(DateTimeFormatter.ISO_DATE))
+//            .addParameter("from-date", LocalDate.now().format(DateTimeFormatter.ISO_DATE))
             .addParameter("page-size", "100")
             .addParameter("api-key", apiKey)
 

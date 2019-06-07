@@ -8,8 +8,8 @@ data class GuardianResponse(val response: GuardianResponseContent)
 
 data class GuardianResponseContent(val results: List<Result>)
 
-data class Result(val fields: Fields)
+data class Result(val fields: Fields, val webPublicationDate: String)
 
-data class Fields(val bodyText: String, val headline: String, val wordcount: String)
+data class Fields(val bodyText: String, val headline: String, val wordcount: String, val membershipAccess: String?)
 
 data class UnexpectedResponseException(val message: String)
