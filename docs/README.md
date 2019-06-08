@@ -21,10 +21,13 @@ Sample application using Ktor framework
 #### push
 `docker push amichal2/brief-repo:0.0.1`
 
-####from Docker registry
+#### from Docker registry
 `docker swarm init`  
 `docker stack deploy -c docker-compose.yml brief`  
 
-####shutdown
+#### shutdown
 `docker stack rm brief`  
 `docker swarm leave --force`  
+
+#### deploy to IBM Cloud from docker registry
+`cf push brief -m 256M --docker-image amichal2/brief-repo:0.0.1`
