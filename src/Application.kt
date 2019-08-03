@@ -1,7 +1,11 @@
 package com.amichal2.brief
 
+import com.amichal2.brief.client.BriefClient
+import com.amichal2.brief.client.BriefClientImpl
 import com.amichal2.brief.model.UnexpectedResponseException
 import com.amichal2.brief.resource.briefRouting
+import com.amichal2.brief.service.BriefService
+import com.amichal2.brief.service.BriefServiceImpl
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.Application
@@ -13,6 +17,10 @@ import io.ktor.jackson.jackson
 import io.ktor.response.respond
 import io.ktor.routing.routing
 import io.ktor.util.KtorExperimentalAPI
+import org.koin.dsl.module
+import org.koin.experimental.builder.singleBy
+import org.koin.ktor.ext.Koin
+import org.koin.ktor.ext.inject
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -37,7 +45,16 @@ fun Application.briefModule() {
         }
     }
 
+    install(Koin) {
+        modules(module {
+            singleBy<BriefService, BriefServiceImpl>()
+            singleBy<BriefClient, BriefClientImpl>()
+        })
+    }
+
+    val briefService: BriefService by inject()
+
     routing {
-        briefRouting()
+        briefRouting(briefService)
     }
 }

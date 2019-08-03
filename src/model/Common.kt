@@ -4,6 +4,7 @@ data class PingRequest(val query: String?, val rating: Int)
 
 data class ContentResponse(val content: String)
 
+//Guardian mappings
 data class GuardianResponse(val response: GuardianResponseContent)
 
 data class GuardianResponseContent(val results: List<Result>)

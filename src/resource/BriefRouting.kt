@@ -1,9 +1,7 @@
 package com.amichal2.brief.resource
 
-import com.amichal2.brief.client.BriefClientImpl
 import com.amichal2.brief.model.PingRequest
-import com.amichal2.brief.service.BriefServiceImpl
-import io.ktor.application.application
+import com.amichal2.brief.service.BriefService
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
@@ -15,19 +13,14 @@ import io.ktor.util.KtorExperimentalAPI
 import java.lang.RuntimeException
 
 @KtorExperimentalAPI
-fun Routing.briefRouting() {
+fun Routing.briefRouting(briefService: BriefService) {
     post("/ping") {
-        val received = call.receive<PingRequest>()
-        call.respond(HttpStatusCode.Accepted, PingRequest(received.query + " from response with rating", received.rating * 10))
+        val pingRequest = call.receive<PingRequest>()
+        call.respond(HttpStatusCode.Accepted, PingRequest(pingRequest.query + " from response with rating", pingRequest.rating * 10))
     }
 
     get("/content") {
         val queryParam = call.request.queryParameters["query"] ?: throw RuntimeException("query parameter is not present")
-        val url = application.environment.config.propertyOrNull("ktor.upstream.url")?.getString() ?: throw RuntimeException("host not defined")
-        val apiKey = application.environment.config.propertyOrNull("ktor.upstream.apiKey")?.getString()
-            ?: throw RuntimeException("api key not defined")
-        val briefService = BriefServiceImpl(BriefClientImpl(queryParam, url, apiKey))
-
-        call.respond(HttpStatusCode.OK, briefService.getContent())
+        call.respond(HttpStatusCode.OK, briefService.getContent(queryParam))
     }
 }
