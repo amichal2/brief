@@ -3,6 +3,8 @@ package com.amichal2.brief
 import com.amichal2.brief.client.BriefClient
 import com.amichal2.brief.client.BriefClientImpl
 import com.amichal2.brief.model.UnexpectedResponseException
+import com.amichal2.brief.repository.MongoDbService
+import com.amichal2.brief.repository.MongoDbServiceImpl
 import com.amichal2.brief.resource.briefRouting
 import com.amichal2.brief.service.BriefService
 import com.amichal2.brief.service.BriefServiceImpl
@@ -23,6 +25,12 @@ import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+
+val koinModule = module {
+    singleBy<BriefService, BriefServiceImpl>()
+    singleBy<BriefClient, BriefClientImpl>()
+    singleBy<MongoDbService, MongoDbServiceImpl>()
+}
 
 @KtorExperimentalAPI
 fun Application.briefModule() {
@@ -46,15 +54,13 @@ fun Application.briefModule() {
     }
 
     install(Koin) {
-        modules(module {
-            singleBy<BriefService, BriefServiceImpl>()
-            singleBy<BriefClient, BriefClientImpl>()
-        })
+        modules(koinModule)
     }
 
     val briefService: BriefService by inject()
+    val mongoDbService: MongoDbService by inject()
 
     routing {
-        briefRouting(briefService)
+        briefRouting(briefService, mongoDbService)
     }
 }

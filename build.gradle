@@ -15,7 +15,7 @@ apply plugin: 'application'
 
 group 'brief'
 version '0.0.1-SNAPSHOT'
-mainClassName = "io.ktor.server.netty.EngineMain"
+mainClassName = "com.amichal2.brief.ApplicationKt"
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
@@ -37,8 +37,12 @@ dependencies {
     compile "io.ktor:ktor-client-jackson:$ktor_version"
     compile "io.ktor:ktor-client-apache:$ktor_version"
     compile "org.koin:koin-ktor:$koin_version"
+    compile "org.mongodb:mongodb-driver-sync:$mongodb_driver_version"
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
     testCompile "io.ktor:ktor-server-test-host:$ktor_version"
+    testCompile "org.koin:koin-test:$koin_version"
+    testCompile "io.ktor:ktor-client-mock:$ktor_version"
+    testCompile "io.ktor:ktor-client-mock-jvm:$ktor_version"
 }
 
 shadowJar {

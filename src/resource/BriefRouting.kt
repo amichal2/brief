@@ -1,6 +1,7 @@
 package com.amichal2.brief.resource
 
 import com.amichal2.brief.model.PingRequest
+import com.amichal2.brief.repository.MongoDbService
 import com.amichal2.brief.service.BriefService
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -13,7 +14,8 @@ import io.ktor.util.KtorExperimentalAPI
 import java.lang.RuntimeException
 
 @KtorExperimentalAPI
-fun Routing.briefRouting(briefService: BriefService) {
+fun Routing.briefRouting(briefService: BriefService, mongoDbService: MongoDbService) {
+
     post("/ping") {
         val pingRequest = call.receive<PingRequest>()
         call.respond(HttpStatusCode.Accepted, PingRequest(pingRequest.query + " from response with rating", pingRequest.rating * 10))
@@ -22,5 +24,9 @@ fun Routing.briefRouting(briefService: BriefService) {
     get("/content") {
         val queryParam = call.request.queryParameters["query"] ?: throw RuntimeException("query parameter is not present")
         call.respond(HttpStatusCode.OK, briefService.getContent(queryParam))
+    }
+
+    get("/collection") {
+        call.respond(HttpStatusCode.OK, mongoDbService.retrieveCollectionData())
     }
 }
