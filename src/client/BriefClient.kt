@@ -34,11 +34,6 @@ class BriefClientImpl : BriefClient {
                     configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 }
             }
-            engine {
-                response.apply {
-                    defaultCharset = Charsets.UTF_8
-                }
-            }
         }
 
         val uriBuilder = URIBuilder(url)
