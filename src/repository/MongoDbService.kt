@@ -26,13 +26,15 @@ class MongoDbServiceImpl : MongoDbService {
     @KtorExperimentalAPI
     private fun getCollection(dbName: String = "briefDB", collectionName: String = "articles"): MongoCollection<Document> {
 
+        System.setProperty("jdk.tls.client.protocols", "TLSv1.2")
+
         val config = HoconApplicationConfig(ConfigFactory.load())
         val username = config.property("ktor.mongodb.username").getString()
         val password = config.property("ktor.mongodb.password").getString()
 
         val settings = MongoClientSettings
             .builder()
-            .applyConnectionString(ConnectionString("mongodb+srv://$username:$password@cluster0-josdm.mongodb.net/$dbName?w=majority"))
+            .applyConnectionString(ConnectionString("mongodb+srv://$username:$password@cluster0.josdm.mongodb.net/?retryWrites=true&w=majority"))
             .retryWrites(true)
             .build()
 
